@@ -1,0 +1,59 @@
+{
+  "name": "image-save",
+  "version": "1.0.0",
+  "description": "Put/save image data into file, canvas or buffer",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "browser": {
+    "./encode": "./encode-browser.js"
+  },
+  "browserify": {
+    "transform": [
+      "brfs"
+    ]
+  },
+  "dependencies": {
+    "image-pixels": "^1.1.1",
+    "image-type": "^3.0.0",
+    "save-file": "^1.2.1"
+  },
+  "devDependencies": {
+    "tape": "^4.9.1"
+  },
+  "scripts": {
+    "test": "tape test",
+    "test-browser": "budo test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/dy/image-save.git"
+  },
+  "keywords": [
+    "pixel",
+    "get",
+    "read",
+    "pixel",
+    "image",
+    "png",
+    "jpeg",
+    "jpg",
+    "jpe",
+    "gif",
+    "decode",
+    "buffer",
+    "data",
+    "parse",
+    "dom",
+    "get-pixels",
+    "node",
+    "ndarray",
+    "image-pixels",
+    "save-pixels",
+    "image data"
+  ],
+  "author": "Dmitry Yv",
+  "license": "MIT",
+  "readmeFilename": "readme.md"
+}
