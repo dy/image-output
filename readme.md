@@ -1,15 +1,23 @@
-# image-save [![Build Status](https://travis-ci.org/dy/image-save.svg?branch=master)](https://travis-ci.org/dy/image-save) [![unstable](https://img.shields.io/badge/stability-unstable-green.svg)](http://github.com/badges/stability-badges)
+# image-output [![Build Status](https://travis-ci.org/dy/image-output.svg?branch=master)](https://travis-ci.org/dy/image-output) [![unstable](https://img.shields.io/badge/stability-unstable-green.svg)](http://github.com/badges/stability-badges)
 
-Put image data to a file, canvas or an array.
+Output image data to a destination: file, canvas, console, stdout, ImageData etc.
 
 ## Usage
 
-[![$ npm install image-save](http://nodei.co/npm/image-save.png?mini=true)](http://npmjs.org/package/image-save)
+[![$ npm install image-output](http://nodei.co/npm/image-output.png?mini=true)](http://npmjs.org/package/image-output)
 
 ```js
-var imsave = require('image-save')
+var output = require('image-output')
+var equal = require('image-equal')
 
-await imsave({
+// save image difference to a file
+var diff = {}
+if (!equal('./a.jpg', './b.jpg', diff)) {
+	output(diff, './ab-diff.jpg')
+}
+
+// create chess pattern png from raw pixels data
+output({
 	data: [0,0,0,1, 1,1,1,1, 1,1,1,1, 0,0,0,1],
 	width: 2,
 	height: 2
@@ -18,66 +26,72 @@ await imsave({
 
 ## API
 
-### `await save(data, destination, options?)`
+### `data = await output(source, destination=console, options?)`
 
-Save pixel `data` into `destination` object, possibly based on `options`.
+Save pixel data `source` to a `destination` based on `options`. Undefined destination displays image to console/stdout.
 
-#### `data`
+#### `source`
 
-Can be any image data or image source:
+Shoud be actual image data container, one of:
 
-* Array, TypedArray
-* Image, ImageData, ImageBitmat
-* ndarray
+* ImageData
 * Canvas, Context2D, WebGLContext
-* dataURL / base64 string
-* URL, path
+* dataURL/base64 string
 * File, Blob
+* Image
+* Array, UintArray, FloatArray
 * ArrayBuffer, Buffer
+* ndarray
 * Buffer
-* etc..
+* File, Blob
+* Promise
+* Object `{data, width, height}`
+* etc.
 
-For the full list of sources see [image-pixels](https://ghub.io/image-pixels).
-Buffer with raw pixel data will be encoded into target format, detected from filename extension.
+That is handy to load image data with [`image-pixels`](https://ghub.io/image-pixels) for that purpose:
+
+```js
+var pixels = require('image-pixels')
+
+output(await pixels(Image), 'image-copy.png')
+```
 
 #### `destination`
 
+Can be any image output destination:
+
 Type | Meaning
 ---|---
-filename | A file to create. Can include extension to define encoding. In node can be a path.
-Canvas2D | Render pixel data into a defined canvas. Only 2D canvas is supported.
+String | File to create or path, in node. Can include extension to define encoding.
+Canvas2D | Render pixel data into a defined canvas. Canvas is resized to fit the image data.
+console | Display image data in console.
 ndarray | Put pixel data into an ndarray.
 Array / FloatArray | Put pixel data with [0..1] range into a float array.
-TypedArray | Put pixel data with [0..255] range into a uint array.
-Buffer / ArrayBuffer | Put pixel data into a buffer.
-
-```js
-var equal = require('image-equal')
-var save = require('image-save')
-
-var diff = {}
-
-// display image difference if two images are not equal
-if (!equal('./a.jpg', './b.jpg', diff)) {
-	save(diff, './ab-diff.jpg')
-}
-```
+TypedArray | Put pixel data with [0..255] range into an uint array.
+Buffer / ArrayBuffer | Put pixel data into a buffer, possibly encoded into target type.
+ImageData | Put data into ImageData instance.
+Object | Creates `data`, `width` and `height` properties on an object.
+Function | Getting called with the data.
+Stream | Prints data to stream, eg. `stdout`.
 
 #### `options`
 
 Property | Meaning
 ---|---
-`clip` | Defile clipping area rectangle from the initial data to save.
-`width` | Defines width of raw pixel data.
-`height` | Defines height of raw pixel data.
-`type` / `mime` | Defines encoding mime type, optional.
-`quality` | Defines encoding quality, optional.
+`clip` | Defile clipping area rectangle from the initial data to save. Can be
+`type` / `mime` | Encode into target type, by default detected from file extension. By default `image/png`.
+`quality` | Defines encoding quality, 0..1, optional. By default 1.
+...rest | Rest of options is passed to encoder.
 
-
-## Related packages
+## Related
 
 * [image-equal](https://ghub.io/image-equal) − compare if two images are equal.
 * [image-pixels](https://ghub.io/image-pixels) − load image data from any source.
+* [image-encode](https://ghub.io/image-encode) − encode image data into one of the target formats.
+
+## Similar
+
+* [save-pixels](https://ghub.io/save-pixels) − output ndarray with image pixels to a file.
 
 ## License
 

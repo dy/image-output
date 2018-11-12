@@ -2,54 +2,117 @@
 'use strict'
 
 var saveFile = require('save-file')
-var imageType = require('image-type')
-var encode = require('./encode')
-var loadSource = require('image-pixels')
+var encode = require('image-encode')
+var u8 = require('to-uint8')
+var ext = require('get-ext')
+var toConsole = require('./console')
 
-module.exports = function savePixels (data, dst, o) {
-	if (!dst) throw Error('Destination must be an object or string')
 
-	if (!o) o = {}
+module.exports = function output (data, dst, o) {
+	if (!dst) dst = console
+
+	if (typeof o === 'string') o = {mime: o}
+	else if (!o) o = {}
 
 	// TODO: add shortcuts here for encoded png → png, array → array, canvas → canvas saves
 
-	return loadSource(data, o).then(function (data) {
-		if (typeof dst === 'string') {
-			return saveFile(encode(data.data, {
-				width: data.width,
-				height: data.height,
-				quality: o.quality || 1
-			}), dst)
+	// figure out width/height
+	if (o.shape) o.width = o.shape[0], o.height = o.shape[1]
+	if (!o.width) o.width = data.shape ? data.shape[0] : data.width
+	if (!o.height) o.height = data.shape ? data.shape[1] : data.height
+	if (!o.width || !o.height) throw new Error('Options must define `width` and `height`')
+
+	var pixels = u8(data)
+
+	// save to a file
+	if (typeof dst === 'string') {
+		var type = o.type || o.mime || o.mimeType
+
+		if (!type) {
+			type = types[ext(dst)] || types.png
 		}
 
-		// canvas2d
-		if (dst.getContext) dst = dst.getContext('2d')
+		return saveFile(encode(data.data, {
+			type: type,
+			width: data.width,
+			height: data.height,
+			quality: o.quality || 1
+		}), dst)
+	}
+
+	// console, stdout
+	if (dst === toConsole.stdout || dst === console) {
+		return toConsole(pixels, o)
+	}
+
+	// canvas2d, context
+	if (dst.getContext) {
+		dst = dst.getContext('2d')
 		if (!dst) throw Error('Only Canvas2D context is supported')
+	}
+	if (dst.canvas) {
+		var ctx = dst
 
-		if (dst.canvas) {
-			var ctx = dst
+		ctx.canvas.width = data.width
+		ctx.canvas.height = data.height
+		var idata = ctx.createImageData(data.width, data.height)
+		idata.data.set(data)
+		ctx.putImageData(idata, 0, 0)
 
-			ctx.canvas.width = data.width
-			ctx.canvas.height = data.height
-			var idata = ctx.createImageData(data.width, data.height)
-			idata.data.set(data)
-			ctx.putImageData(idata, 0, 0)
+		return Promise.resolve(dst)
+	}
 
-			return Promise.resolve(dst)
-		}
+	// Stream
 
-		// array-ish
-		if (dst.length != null) {
+	// ndarray
+
+	// function
+
+	// ImageData
+
+	// Array, TypedArray
+
+	// Buffer, ArrayBuffer
+
+	// Object
+
+	if (dst instanceof ArrayBuffer) {
+		return output(data, new Uint8Array(dst), o).then(function (dst) {
+			return dst.buffer
+		})
+	}
+
+	if (dst.length != null) {
+		if (isFloatArr(dst)) {
 			for (let i = 0; i < data.length; i++) {
-				dst[i] = data[i]
+				dst[i] = data[i] / 255
 			}
-
-			return Promise.resolve(dst)
 		}
 
-		// object
-		dst.data = data
+		else {
+			dst.set(data.data)
+		}
 
-		return dst
-	})
+		return Promise.resolve(dst)
+	}
+}
+
+
+var types = {
+	'png': 'image/png',
+	'image/png': 'image/png',
+	'gif': 'image/gif',
+	'image/gif': 'image/gif',
+	'image/jpeg': 'image/jpeg',
+	'image/jpg': 'image/jpeg',
+	'jpg': 'image/jpeg',
+	'jpeg': 'image/jpeg',
+	'bmp': 'image/bmp',
+	'image/bmp': 'image/bmp',
+	'image/bitmap': 'image/bmp',
+	'tiff': 'image/tiff',
+	'tif': 'image/tiff',
+	'exif': 'image/tiff',
+	'image/tif': 'image/tiff',
+	'image/tiff': 'image/tiff'
 }
