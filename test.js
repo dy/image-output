@@ -2,7 +2,7 @@
 
 
 var t = require('tape')
-var save = require('./')
+var output = require('./')
 var fixture = require('./fixture')
 var isBrowser = require('is-browser')
 var load = require('image-pixels')
@@ -15,7 +15,7 @@ t('output to file', async t => {
   if (isBrowser) return t.end()
 
   t.plan(1)
-  await save(fixture, 'file.png')
+  await output(fixture, 'file.png')
   let pixels = await load('file.png')
 
   t.deepEqual(pixels.data, fixture.data)
@@ -25,24 +25,24 @@ t('output to file', async t => {
   t.end()
 })
 
-t.only('output to canvas, context', async t => {
+t('output to canvas, context', async t => {
+  if (!isBrowser) return t.end()
+
   var canvas = document.createElement('canvas')
   var context = canvas.getContext('2d')
 
-  await save(fixture, canvas)
+  await output(fixture, canvas)
   var idata = context.getImageData(0, 0, canvas.width, canvas.height)
   t.deepEqual(idata.data, fixture.data)
 
-  await save(fixture, context)
+  await output(fixture, context)
   var idata = context.getImageData(0, 0, canvas.width, canvas.height)
   t.deepEqual(idata.data, fixture.data)
-
-  // TODO: test out resizing the canvas
 
   t.end()
 })
 
-t('output to array', async t => {
+t.only('output to array', async t => {
   var out = []
 
   var arr = new Float64Array(fixture.data.length)
@@ -50,7 +50,7 @@ t('output to array', async t => {
     arr[i] = fixture.data[i] / 255
   }
 
-  await save(fixture, out)
+  await output(fixture, out)
 
   t.deepEqual(out, arr)
 
@@ -60,7 +60,7 @@ t('output to array', async t => {
 t('output to typed array', async t => {
   var out = new Uint8Array(fixture.data.length)
 
-  await save(fixture, out)
+  await output(fixture, out)
 
   t.deepEqual(out, fixture.data)
   t.end()
@@ -69,7 +69,7 @@ t('output to typed array', async t => {
 t('output to ndarray', async t => {
   var out = new NDArray([], [fixture.width, fixture.height, 4])
 
-  await save(fixture, out)
+  await output(fixture, out)
 
   getNdPixels(fixture.pngDataURL, async (e, px) => {
     t.deepEqual(px.shape, out.shape)
@@ -82,7 +82,7 @@ t('output to ndarray', async t => {
 t('output to arraybuffer', async t => {
   var out = new Uint8Array(fixture.data.length)
 
-  await save(fixture, out.buffer)
+  await output(fixture, out.buffer)
 
   t.deepEqual(out, fixture.data)
   t.end()
@@ -91,7 +91,7 @@ t('output to arraybuffer', async t => {
 t('output to buffer', async t => {
   var out = new Buffer(fixture.data.length)
 
-  await save(fixture, out.buffer)
+  await output(fixture, out.buffer)
 
   t.deepEqual(new Uint8Array(out.buffer), fixture.data)
   t.end()
@@ -128,7 +128,7 @@ t('input Promise', async t => {
 
 t('readme case', async t => {
   var arr = new Uint8Array(16)
-  await save({
+  await output({
     data: [0,0,0,1, 1,1,1,1, 1,1,1,1, 0,0,0,1],
     width: 2,
     height: 2
@@ -140,7 +140,7 @@ t('readme case', async t => {
 })
 
 t.skip('encode into jpg', async t => {
-  var data = await save(fixture, {
+  var data = await output(fixture, {
     mime: 'jpeg'
   })
 })

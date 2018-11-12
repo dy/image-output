@@ -23,21 +23,17 @@ module.exports = function output (data, dst, o) {
 	if (!o.width || !o.height) throw new Error('Options must define `width` and `height`')
 
 	var pixels = u8(data)
+	o.type = o.type || o.mime || o.mimeType || o.format
+	o.quality = o.quality || 1
 
 	// save to a file
 	if (typeof dst === 'string') {
-		var type = o.type || o.mime || o.mimeType
 
-		if (!type) {
-			type = types[ext(dst)] || types.png
+		if (!o.type) {
+			o.type = types[ext(dst)] || types.png
 		}
 
-		return saveFile(encode(data.data, {
-			type: type,
-			width: data.width,
-			height: data.height,
-			quality: o.quality || 1
-		}), dst)
+		return saveFile(encode(pixels, o), dst)
 	}
 
 	// console, stdout
@@ -53,10 +49,10 @@ module.exports = function output (data, dst, o) {
 	if (dst.canvas) {
 		var ctx = dst
 
-		ctx.canvas.width = data.width
-		ctx.canvas.height = data.height
-		var idata = ctx.createImageData(data.width, data.height)
-		idata.data.set(data)
+		ctx.canvas.width = o.width
+		ctx.canvas.height = o.height
+		var idata = ctx.createImageData(o.width, o.height)
+		idata.data.set(pixels)
 		ctx.putImageData(idata, 0, 0)
 
 		return Promise.resolve(dst)
