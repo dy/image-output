@@ -42,7 +42,7 @@
     "tape": "^4.9.1"
   },
   "scripts": {
-    "test": "tape test",
+    "test": "node test",
     "test-browser": "budo test"
   },
   "repository": {

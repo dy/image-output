@@ -25,7 +25,7 @@ Save pixel data `source` to a `destination` based on `options`. Undefined destin
 
 #### `source`
 
-Shoud be actual image data container, one of:
+Shoud be an actual image data container, one of:
 
 * ImageData
 * Canvas, Context2D, WebGLContext
@@ -41,12 +41,11 @@ Shoud be actual image data container, one of:
 * Object `{data, width, height}`
 * etc.
 
-That is handy to load image data with [`image-pixels`](https://ghub.io/image-pixels) for that purpose:
+Handy for that purpose is [`image-pixels`](https://ghub.io/image-pixels):
 
 ```js
 var pixels = require('image-pixels')
-
-output(await pixels(Image), 'image-copy.png')
+output(await pixels(img), 'image-copy.png')
 ```
 
 #### `destination`
