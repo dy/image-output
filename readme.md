@@ -8,13 +8,6 @@ Output image data to a destination: file, canvas, console, stdout, ImageData etc
 
 ```js
 var output = require('image-output')
-var equal = require('image-equal')
-
-// save image difference to a file
-var diff = {}
-if (!equal('./a.jpg', './b.jpg', diff)) {
-	output(diff, './ab-diff.jpg')
-}
 
 // create chess pattern png from raw pixels data
 output({
@@ -92,6 +85,7 @@ Property | Meaning
 ## Similar
 
 * [save-pixels](https://ghub.io/save-pixels) − output ndarray with image pixels to a file.
+* [terminal-image](https://ghub.io/terminal-image) − print image to a terminal.
 
 ## License
 

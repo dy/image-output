@@ -192,6 +192,17 @@ t('readme case', async t => {
   t.end()
 })
 
+t('arguments cases', async t => {
+  var arr = new Uint8Array(16)
+
+  await output([0,0,0,1, 1,1,1,1, 1,1,1,1, 0,0,0,1], arr, [2, 2])
+  t.deepEqual(arr, [0,0,0,255, 255,255,255,255, 255,255,255,255, 0,0,0,255])
+
+  await output([0,0,0,1, 1,1,1,1, 1,1,1,1, 0,0,0,1], {width: 2, height: 2}, arr)
+  t.deepEqual(arr, [0,0,0,255, 255,255,255,255, 255,255,255,255, 0,0,0,255])
+
+  t.end()
+})
 
 
 // save-pixels test cases

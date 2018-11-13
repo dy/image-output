@@ -12,13 +12,21 @@ var toab = require('to-array-buffer')
 var isStream = require('is-stream')
 var isBrowser = require('is-browser')
 var isBlob = require('is-blob')
+var isObj = require('is-plain-obj')
 
 var context
 
 module.exports = function output (data, dst, o) {
 	if (!dst) dst = console
 
+	if (isObj(dst) && o && !isObj(o)) {
+		var t = dst
+		dst = o
+		o = t
+	}
+
 	if (typeof o === 'string') o = {mime: o}
+	else if (Array.isArray(o)) o = {shape: o}
 	else if (!o) o = {}
 
 	// TODO: add shortcuts here for encoded png → png, array → array, canvas → canvas saves
