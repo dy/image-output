@@ -6,7 +6,9 @@ var encode = require('image-encode')
 var u8 = require('to-uint8')
 var isFloat = require('is-float-array')
 var ext = require('get-ext')
+var isBuffer = require('is-buffer')
 var toConsole = require('./console')
+var toab = require('to-array-buffer')
 
 module.exports = function output (data, dst, o) {
 	if (!dst) dst = console
@@ -22,7 +24,28 @@ module.exports = function output (data, dst, o) {
 	if (!o.height) o.height = data.shape ? data.shape[1] : data.height
 	if (!o.width || !o.height) throw new Error('Options must define `width` and `height`')
 
+	// TODO: generalize that in a separate package
+	// repack 3-channel ndarrays
+	if (data.shape && data.stride[2] !== 4) {
+		var i = 0
+		var newData = new Uint8Array(data.shape[0] * data.shape[1] * 4)
+		for (var x = 0; x < data.shape[0]; x++) {
+			for (var y = 0; y < data.shape[1]; y++) {
+				var r = data.get(x, y, 0) || 0
+				var g = data.get(x, y, 1) || 0
+				var b = data.get(x, y, 2) || 0
+				var a = 255
+				newData[(i << 2)] = r
+				newData[(i << 2) + 1] = g
+				newData[(i << 2) + 2] = b
+				newData[(i << 2) + 3] = a
+				i++
+			}
+		}
+		data = newData
+	}
 	var pixels = u8(data)
+
 	o.type = o.type || o.mime || o.mimeType || o.format
 	o.quality = o.quality || 1
 
@@ -62,16 +85,18 @@ module.exports = function output (data, dst, o) {
 
 	// function
 
+	// Object
+
 	// ImageData
 
-	// Buffer, ArrayBuffer
-
-	// Object
-	// if (dst instanceof ArrayBuffer) {
-	// 	return output(data, new Uint8Array(dst), o).then(function (dst) {
-	// 		return dst.buffer
-	// 	})
-	// }
+	// ArrayBuffer
+	if (dst instanceof ArrayBuffer) {
+		dst = new Uint8Array(dst)
+	}
+	// Buffer
+	if (isBuffer(dst)) {
+		dst = new Uint8Array(toab(dst))
+	}
 
 	// Array, TypedArray
 	if (dst.length != null) {

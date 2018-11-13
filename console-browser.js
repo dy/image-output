@@ -22,7 +22,7 @@ function toConsole (pixels, o) {
 		var idata = context.createImageData(o.width, o.height)
 		idata.data.set(pixels)
 		context.putImageData(idata, 0, 0)
-		pngURL = canvas.toDataURL()
+		pngURL = context.canvas.toDataURL()
 		cache.set(pixels, pngURL)
 	}
 
@@ -30,7 +30,8 @@ function toConsole (pixels, o) {
 	console.log('%c+', [
       'font-size: 0;',
       'display: inline-block;',
-   	  'line-height:' + o.height + 'px;',
+   	  'line-height: 0;',
+      'padding: ' + (o.height * .5) + 'px ' + (o.width * .5) + 'px;',
    	  'background:url(',
         pngURL.replace(/\(/g, '%28').replace(/\)/g, '%29'),
    	  ');',

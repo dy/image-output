@@ -9,6 +9,8 @@ var load = require('image-pixels')
 var del = require('del')
 var NDArray = require('ndarray')
 var getNdPixels = require('get-pixels')
+var toab = require('to-array-buffer')
+var lena = require('lena')
 
 
 t('output to file', async t => {
@@ -85,7 +87,7 @@ t('output to ndarray', async t => {
   })
 })
 
-t.only('output to arraybuffer', async t => {
+t('output to arraybuffer', async t => {
   var out = new Uint8Array(fixture.data.length)
 
   await output(fixture, out.buffer)
@@ -97,14 +99,15 @@ t.only('output to arraybuffer', async t => {
 t('output to buffer', async t => {
   var out = new Buffer(fixture.data.length)
 
-  await output(fixture, out.buffer)
+  await output(fixture, out)
 
-  t.deepEqual(new Uint8Array(out.buffer), fixture.data)
+  t.deepEqual(new Uint8Array(toab(out)), fixture.data)
   t.end()
 })
 
-t('output to console', async t => {
-
+t.only('output to console', async t => {
+  await output(lena, console)
+  t.end()
 })
 
 t('output to default', async t => {
@@ -126,6 +129,8 @@ t('output to function', async t => {
 t('output to stdout', async t => {
 
 })
+
+t('output to Stream')
 
 t('input File, Blob', async t => {
 

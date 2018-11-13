@@ -5,6 +5,6 @@
 module.exports = toConsole
 module.exports.stdout = process.stdout
 
-function toConsole () {
+function toConsole (pixels, o) {
 
 }
