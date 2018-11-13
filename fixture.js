@@ -6,6 +6,13 @@ var fixture = {
 	height: 8,
 }
 
+var arr = new Float64Array(fixture.data.length)
+for (let i = 0; i < arr.length; i++) {
+    arr[i] = fixture.data[i] / 255
+}
+
+fixture.float = arr
+
 fixture.canvas2d = drawToCanvas(fixture)
 
 

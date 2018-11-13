@@ -4,9 +4,9 @@
 var saveFile = require('save-file')
 var encode = require('image-encode')
 var u8 = require('to-uint8')
+var isFloat = require('is-float-array')
 var ext = require('get-ext')
 var toConsole = require('./console')
-
 
 module.exports = function output (data, dst, o) {
 	if (!dst) dst = console
@@ -55,44 +55,60 @@ module.exports = function output (data, dst, o) {
 		idata.data.set(pixels)
 		ctx.putImageData(idata, 0, 0)
 
-		return Promise.resolve(dst)
+		return Promise.resolve(idata)
 	}
 
 	// Stream
-
-	// ndarray
 
 	// function
 
 	// ImageData
 
-	// Array, TypedArray
-
 	// Buffer, ArrayBuffer
 
 	// Object
+	// if (dst instanceof ArrayBuffer) {
+	// 	return output(data, new Uint8Array(dst), o).then(function (dst) {
+	// 		return dst.buffer
+	// 	})
+	// }
 
-	if (dst instanceof ArrayBuffer) {
-		return output(data, new Uint8Array(dst), o).then(function (dst) {
-			return dst.buffer
-		})
-	}
-
+	// Array, TypedArray
 	if (dst.length != null) {
-		if (isFloatArr(dst)) {
-			for (let i = 0; i < data.length; i++) {
-				dst[i] = data[i] / 255
+		if (isFloat(dst)) {
+			for (let i = 0; i < pixels.length; i++) {
+				dst[i] = pixels[i] / 255
 			}
 		}
-
 		else {
-			dst.set(data.data)
+			dst.set(pixels)
 		}
 
 		return Promise.resolve(dst)
 	}
+
+	// ndarray
+	if (isNdarray(dst)) {
+		var i = 0
+		for (var x = 0; x < o.width; x++) {
+			for (var y = 0; y < o.height; y++) {
+				dst.set(x, y, 0, pixels[i++])
+				dst.set(x, y, 1, pixels[i++])
+				dst.set(x, y, 2, pixels[i++])
+				dst.set(x, y, 3, pixels[i++])
+			}
+		}
+		return Promise.resolve(dst)
+	}
 }
 
+function isNdarray(v) {
+	return v &&
+	    v.shape &&
+	    v.stride &&
+	    v.offset != null &&
+	    v.dtype
+}
 
 var types = {
 	'png': 'image/png',

@@ -7,8 +7,8 @@ var fixture = require('./fixture')
 var isBrowser = require('is-browser')
 var load = require('image-pixels')
 var del = require('del')
-// var NDArray = require('ndarray')
-// var getNdPixels = require('get-pixels')
+var NDArray = require('ndarray')
+var getNdPixels = require('get-pixels')
 
 
 t('output to file', async t => {
@@ -26,6 +26,7 @@ t('output to file', async t => {
 })
 
 t('output to canvas, context', async t => {
+  // TODO: add node-canvas tests here
   if (!isBrowser) return t.end()
 
   var canvas = document.createElement('canvas')
@@ -42,22 +43,17 @@ t('output to canvas, context', async t => {
   t.end()
 })
 
-t.only('output to array', async t => {
+t('output to array', async t => {
   var out = []
-
-  var arr = new Float64Array(fixture.data.length)
-  for (let i = 0; i < arr.length; i++) {
-    arr[i] = fixture.data[i] / 255
-  }
 
   await output(fixture, out)
 
-  t.deepEqual(out, arr)
+  t.deepEqual(out, fixture.float)
 
   t.end()
 })
 
-t('output to typed array', async t => {
+t('output to uint array', async t => {
   var out = new Uint8Array(fixture.data.length)
 
   await output(fixture, out)
@@ -66,20 +62,30 @@ t('output to typed array', async t => {
   t.end()
 })
 
+t('output to float array', async t => {
+  var out = new Float64Array(fixture.data.length)
+
+  await output(fixture, out)
+
+  t.deepEqual(out, fixture.float)
+  t.end()
+})
+
 t('output to ndarray', async t => {
   var out = new NDArray([], [fixture.width, fixture.height, 4])
 
   await output(fixture, out)
 
-  getNdPixels(fixture.pngDataURL, async (e, px) => {
+  getNdPixels(fixture.pngDataURL, (e, px) => {
     t.deepEqual(px.shape, out.shape)
     t.deepEqual(Array.from(px.data), Array.from(out.data))
+    t.deepEqual(px.get(0,0,1), out.get(0,0,1))
 
     t.end()
   })
 })
 
-t('output to arraybuffer', async t => {
+t.only('output to arraybuffer', async t => {
   var out = new Uint8Array(fixture.data.length)
 
   await output(fixture, out.buffer)
@@ -98,6 +104,10 @@ t('output to buffer', async t => {
 })
 
 t('output to console', async t => {
+
+})
+
+t('output to default', async t => {
 
 })
 
