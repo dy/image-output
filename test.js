@@ -106,7 +106,7 @@ t('output to buffer', async t => {
 })
 
 t.only('output to console', async t => {
-  await output(lena, console)
+  await output(fixture, console)
   t.end()
 })
 
