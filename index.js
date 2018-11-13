@@ -3,7 +3,7 @@
 
 var saveFile = require('save-file')
 var encode = require('image-encode')
-var u8 = require('to-uint8')
+var pxls = require('pxls')
 var isFloat = require('is-float-array')
 var ext = require('get-ext')
 var isBuffer = require('is-buffer')
@@ -65,12 +65,7 @@ module.exports = function output (data, dst, o) {
 		throw new Error('Options must define `width` and `height`')
 	}
 
-	// TODO: generalize that in a separate package
-	// repack 3-channel ndarrays
-	if (isNdarray(data)) {
-		data = extractNdarray(data)
-	}
-	var pixels = u8(data)
+	var pixels = pxls(data)
 
 	// save to a file
 	if (typeof dst === 'string') {
@@ -174,55 +169,13 @@ module.exports = function output (data, dst, o) {
 }
 
 function isNdarray(v) {
-	return v &&
-	    v.shape &&
-	    v.stride &&
-	    v.offset != null &&
-	    v.dtype
+  return v &&
+      v.shape &&
+      v.stride &&
+      v.offset != null &&
+      v.dtype
 }
 
-// An extraction from save-pixels
-// FIXME: move to a separate package to reduce size
-function extractNdarray(data) {
-	var i = 0
-
-	// rgb array
-    if (data.shape[2] === 3) {
-		var newData = new Uint8Array(data.shape[0] * data.shape[1] * 4)
-		for (var x = 0; x < data.shape[0]; x++) {
-			for (var y = 0; y < data.shape[1]; y++) {
-				var r = data.get(y, x, 0) || 0
-				var g = data.get(y, x, 1) || 0
-				var b = data.get(y, x, 2) || 0
-				var a = 255
-				newData[(i << 2)] = r
-				newData[(i << 2) + 1] = g
-				newData[(i << 2) + 2] = b
-				newData[(i << 2) + 3] = a
-				i++
-			}
-		}
-		return newData
-	}
-
-	// bitmap array
-	if (data.shape[2] === 1 || !data.shape[2]) {
-		var newData = new Uint8Array(data.shape[0] * data.shape[1] * 4)
-		for (var x = 0; x < data.shape[0]; x++) {
-			for (var y = 0; y < data.shape[1]; y++) {
-				var r = data.get(y, x, 0) || 0
-				newData[(i << 2)] = r
-				newData[(i << 2) + 1] = r
-				newData[(i << 2) + 2] = r
-				newData[(i << 2) + 3] = 255
-				i++
-			}
-		}
-		return newData
-	}
-
-	return data.data
-}
 
 var types = {
 	'png': 'image/png',
