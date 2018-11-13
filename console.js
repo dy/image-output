@@ -8,16 +8,23 @@ var termImg = require('term-img')
 var u8 = require('to-uint8')
 var encode = require('image-encode')
 
-module.exports = function toConsole(pixels, o) {
-	return termImg(Buffer.from(encode(pixels, 'png', o)), {
-		width: '100%',
-		height: '100%',
-		fallback: function () { toConsoleOldschool(pixels, o) }
-	})
-}
-module.exports.stdout = process.stdout
+module.exports = toConsole
 
-// adapted from https://github.com/sindresorhus/terminal-image/blob/master/index.js
+toConsole.stdout = process.stdout
+
+function toConsole(pixels, o) {
+    var data = encode(pixels, 'png', o)
+
+    termImg(Buffer.from(data), {
+        width: '100%',
+        height: '100%',
+        fallback: function () { toConsoleOldschool(pixels, o) }
+    })
+
+    return data
+}
+
+// adapted from terminal-image and picture-tube
 var PIXEL = '\u2584';
 
 function toConsoleOldschool (pixels, o) {
@@ -25,7 +32,7 @@ function toConsoleOldschool (pixels, o) {
 	var size = termSize()
 	var cols = Math.min(o.width, size.columns - 2)
 	var dx = o.width / cols
-    var dy = 1.5 * dx
+    var dy = 2 * dx
 
 	var str = ''
     for (var y = 0; y < o.height - 1; y += dy) {
@@ -45,5 +52,5 @@ function toConsoleOldschool (pixels, o) {
     	str += '\n'
     }
 
-    process.stdout.write(str)
+    toConsole.stdout.write(str)
 }

@@ -37,5 +37,7 @@ function toConsole (pixels, o) {
    	  ');',
    	  'background-size:' + o.width + 'px ' + o.height + 'px;',
       'color: transparent;'
-  ].join(''))
+	].join(''))
+
+	return pngURL
 }
