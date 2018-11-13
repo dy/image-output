@@ -3,7 +3,7 @@
 'use strict'
 
 var WeakMap = require('weak-map')
-var canvas, context
+var context
 var cache = new WeakMap
 
 module.exports = toConsole

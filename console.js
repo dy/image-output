@@ -24,12 +24,11 @@ function toConsoleOldschool (pixels, o) {
 	pixels = u8(pixels)
 	var size = termSize()
 	var cols = Math.min(o.width, size.columns - 2)
-	var ratio = o.width / o.height
 	var dx = o.width / cols
-    var dy = dx
+    var dy = 1.5 * dx
 
 	var str = ''
-    for (var y = 0; y < o.height; y += dy) {
+    for (var y = 0; y < o.height - 1; y += dy) {
         for (var x = 0; x < o.width; x += dx) {
             var i = (Math.floor(y) * o.width + Math.floor(x)) * 4
             var r = pixels[i]
@@ -37,9 +36,9 @@ function toConsoleOldschool (pixels, o) {
             var b = pixels[i + 2]
             var a = pixels[i + 3]
             var i2 = (Math.floor(y + 1) * o.width + Math.floor(x)) * 4
-            var r2 = pixels[i]
-            var g2 = pixels[i + 1]
-            var b2 = pixels[i + 2]
+            var r2 = pixels[i2]
+            var g2 = pixels[i2 + 1]
+            var b2 = pixels[i2 + 2]
             if (!a) str += chalk.reset(' ')
             else str += chalk.bgRgb(r, g, b).rgb(r2, g2, b2)(PIXEL)
         }
