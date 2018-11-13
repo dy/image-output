@@ -9,11 +9,6 @@
   "browser": {
     "./console": "./console-browser.js"
   },
-  "browserify": {
-    "transform": [
-      "brfs"
-    ]
-  },
   "dependencies": {
     "chalk": "^2.4.1",
     "get-ext": "^1.0.2",
@@ -28,8 +23,7 @@
     "save-file": "^1.2.3",
     "term-img": "^2.1.0",
     "term-size": "^1.2.0",
-    "to-array-buffer": "^3.1.1",
-    "to-uint8": "^1.4.0"
+    "to-array-buffer": "^3.1.1"
   },
   "devDependencies": {
     "del": "^3.0.0",
