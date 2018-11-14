@@ -41,19 +41,6 @@ module.exports = function output (data, dst, o) {
 		})
 	}
 
-	// DOM load async shortcut, expects data to be loaded though
-	if (isBrowser) {
-		if (data instanceof File || isBlob(data) || data.tagName || data instanceof ImageBitmap) {
-			if (!context) context = document.createElement('canvas').getContext('2d')
-			context.canvas.width = data.width
-			context.canvas.height = data.height
-
-			context.drawImage(data, 0, 0)
-
-			return context.getImageData(0, 0, context.canvas.width, context.canvas.height)
-		}
-	}
-
 	// figure out width/height
 	if (o.shape) o.width = o.shape[0], o.height = o.shape[1]
 	if (!o.width) o.width = data.shape ? data.shape[0] : data.width
