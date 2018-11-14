@@ -13,6 +13,22 @@ var toab = require('to-array-buffer')
 var lena = require('lena')
 var fs = require('fs')
 
+t('shape use case', async t => {
+  if (isBrowser) return t.end()
+
+  output([0,0,0,1,1,1,1,1,1,1,1,1,0,0,0,1], [2,2], 'a.png')
+
+  t.deepEqual((await load('a.png')).data, [0,0,0,255,255,255,255,255,255,255,255,255,0,0,0,255])
+
+  output([0,1,1,0], [2,2], 'b.png')
+  t.deepEqual((await load('b.png')).data, [0,0,0,255,255,255,255,255,255,255,255,255,0,0,0,255])
+
+  del('a.png')
+  del('b.png')
+
+  t.end()
+})
+
 t('output to file', async t => {
   if (isBrowser) return t.end()
 

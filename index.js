@@ -17,13 +17,14 @@ var isObj = require('is-plain-obj')
 var context
 
 module.exports = function output (data, dst, o) {
-	if (!dst) dst = console
-
-	if (isObj(dst) && o && !isObj(o)) {
+	// swap dst/o
+	if ((isObj(dst) || typeof dst === 'string' || Array.isArray(dst)) && o && !isObj(o)) {
 		var t = dst
 		dst = o
 		o = t
 	}
+
+	if (!dst) dst = console
 
 	if (typeof o === 'string') o = {mime: o}
 	else if (Array.isArray(o)) o = {shape: o}
@@ -49,7 +50,7 @@ module.exports = function output (data, dst, o) {
 		throw new Error('Options must define `width` and `height`')
 	}
 
-	var pixels = pxls(data)
+	var pixels = pxls(data, [o.width, o.height])
 
 	// save to a file
 	if (typeof dst === 'string') {

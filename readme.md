@@ -19,9 +19,14 @@ output({
 
 ## API
 
-### `output(source, destination=console, options?)`
+### `output(source, destination?, shape|options?)`
+### `output(source, shape|options?, destination?)`
 
-Output pixel data `source` to a `destination` based on `options`. Undefined destination displays image to console/stdout. The operation is done in sync fashion.
+Output pixel data `source` to a `destination` based on `options`. Undefined destination displays image to console/stdout. The operation is done in sync fashion. `destination` and `options` may come in the opposite order for conveniency.
+
+```js
+output([0,1,1,0], [2,2,1], 'a.png')
+```
 
 #### `source`
 
