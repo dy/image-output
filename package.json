@@ -1,6 +1,6 @@
 {
   "name": "image-output",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "description": "Output image data to a file, console, canvas, array or buffer",
   "main": "index.js",
   "directories": {
