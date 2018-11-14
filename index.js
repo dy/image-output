@@ -43,8 +43,7 @@ module.exports = function output (data, dst, o) {
 
 	// DOM load async shortcut, expects data to be loaded though
 	if (isBrowser) {
-		if (data instanceof File || isBlob(data) || data.tagName || data instanceof ImageBitmap)
-		return createImageBitmap(data).then(function (imageBitmap) {
+		if (data instanceof File || isBlob(data) || data.tagName || data instanceof ImageBitmap) {
 			if (!context) context = document.createElement('canvas').getContext('2d')
 			context.canvas.width = imageBitmap.width
 			context.canvas.height = imageBitmap.height
@@ -52,9 +51,7 @@ module.exports = function output (data, dst, o) {
 			context.drawImage(imageBitmap, 0, 0)
 
 			return context.getImageData(0, 0, context.canvas.width, context.canvas.height)
-		}).then(function (data) {
-			return output(data, dst, o)
-		})
+		}
 	}
 
 	// figure out width/height
@@ -69,7 +66,7 @@ module.exports = function output (data, dst, o) {
 
 	// save to a file
 	if (typeof dst === 'string') {
-		return saveFile(encode(pixels, o), dst)
+		return saveFile.sync(encode(pixels, o), dst)
 	}
 
 	// console, stdout
@@ -96,25 +93,25 @@ module.exports = function output (data, dst, o) {
 			ctx.drawImage(data)
 		}
 
-		return Promise.resolve(idata)
+		return idata
 	}
 
 	// Stream
 	if (isStream(dst)) {
 		if (!dst.write) throw Error('Only writable streams are supported')
 
-		return new Promise(function (ok, nok) {
-			var data = encode(pixels, o)
-			dst.write(Buffer.from(data))
-			ok(data)
-			dst.on('error', nok)
+		var data = encode(pixels, o)
+		dst.write(Buffer.from(data))
+		dst.on('error', function (e) {
+			throw e
 		})
+		return data
 	}
 
 	// function
 	if (typeof dst === 'function') {
 		var data = {data: pixels, width: o.width, height: o.height}
-		return Promise.resolve(dst(data) || data)
+		return dst(data) || data
 	}
 
 	// ArrayBuffer
@@ -133,7 +130,7 @@ module.exports = function output (data, dst, o) {
 			dst.set(pixels)
 		}
 
-		return Promise.resolve(dst)
+		return dst
 	}
 
 	// ndarray
@@ -147,7 +144,7 @@ module.exports = function output (data, dst, o) {
 				dst.set(x, y, 3, pixels[i++])
 			}
 		}
-		return Promise.resolve(dst)
+		return dst
 	}
 
 	// ImageData, rest of objects
@@ -164,7 +161,7 @@ module.exports = function output (data, dst, o) {
 		if (dst.data && dst.data.set) dst.data.set(pixels)
 		else dst.data = pixels
 
-		return Promise.resolve(dst)
+		return dst
 	}
 }
 

@@ -217,7 +217,8 @@ function writePixels(t, array, filepath, format, options, cb) {
   options = options || {}
   options.format = format
   var out = fs.createWriteStream(filepath)
-  output(array, out, options).then(() => cb(), cb)
+  output(array, out, options)
+  cb()
 
   // var out = fs.createWriteStream(filepath)
   // var pxstream = savePixels(array, format, options)

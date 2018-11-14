@@ -20,7 +20,7 @@
     "is-obj": "^1.0.1",
     "is-plain-obj": "^1.1.0",
     "pxls": "^2.0.0",
-    "save-file": "^1.2.3",
+    "save-file": "^2.1.0",
     "term-img": "^2.1.0",
     "term-size": "^1.2.0",
     "to-array-buffer": "^3.1.1"
@@ -28,7 +28,7 @@
   "devDependencies": {
     "del": "^3.0.0",
     "get-pixels": "^3.3.2",
-    "image-pixels": "^2.0.3",
+    "image-pixels": "^2.2.0",
     "is-browser": "^2.1.0",
     "lena": "^1.0.0",
     "ndarray": "^1.0.18",

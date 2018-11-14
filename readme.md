@@ -19,15 +19,15 @@ output({
 
 ## API
 
-### `data = await output(source, destination=console, options?)`
+### `output(source, destination=console, options?)`
 
-Save pixel data `source` to a `destination` based on `options`. Undefined destination displays image to console/stdout.
+Output pixel data `source` to a `destination` based on `options`. Undefined destination displays image to console/stdout. The operation is done in sync fashion.
 
 #### `source`
 
 Shoud be an actual image data container, one of:
 
-* ImageData
+* ImageData, `{data, width, height}` object
 * Canvas, Context2D, WebGLContext
 * dataURL/base64 string
 * File, Blob
@@ -38,7 +38,6 @@ Shoud be an actual image data container, one of:
 * Buffer
 * File, Blob
 * Promise
-* Object `{data, width, height}`
 * etc.
 
 Handy for that purpose is [`image-pixels`](https://ghub.io/image-pixels):
