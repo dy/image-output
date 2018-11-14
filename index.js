@@ -45,10 +45,10 @@ module.exports = function output (data, dst, o) {
 	if (isBrowser) {
 		if (data instanceof File || isBlob(data) || data.tagName || data instanceof ImageBitmap) {
 			if (!context) context = document.createElement('canvas').getContext('2d')
-			context.canvas.width = imageBitmap.width
-			context.canvas.height = imageBitmap.height
+			context.canvas.width = data.width
+			context.canvas.height = data.height
 
-			context.drawImage(imageBitmap, 0, 0)
+			context.drawImage(data, 0, 0)
 
 			return context.getImageData(0, 0, context.canvas.width, context.canvas.height)
 		}

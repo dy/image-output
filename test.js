@@ -168,10 +168,10 @@ t('input File, Blob, Image, Canvas, Promise and other asyncs', async t => {
   if (!isBrowser) return t.end()
 
   fixture.canvas2d.toBlob(async function (blob) {
-    output(blob)
-    output(new File([blob], 'x.png'))
-    let bmpromise = await createImageBitmap(blob)
-    output(bmpromise)
+    // output(blob)
+    // output(new File([blob], 'x.png'))
+    // let bmpromise = await createImageBitmap(blob)
+    // output(bmpromise)
     output(fixture.canvas2d)
   })
 

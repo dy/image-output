@@ -12,7 +12,7 @@
   "dependencies": {
     "chalk": "^2.4.1",
     "get-ext": "^1.0.2",
-    "image-encode": "^1.2.3",
+    "image-encode": "^1.2.4",
     "image-type": "^3.0.0",
     "is-blob": "^2.0.1",
     "is-buffer": "^2.0.3",
