@@ -13,6 +13,16 @@ var toab = require('to-array-buffer')
 var lena = require('lena')
 var fs = require('fs')
 
+t('show constructed 2px data', t => {
+  output({
+    data: [0,0,0,255, 255,255,255,255, 255,255,255,255, 0,0,0,255],
+    width: 2,
+    height: 2
+  }, console)
+
+  t.end()
+})
+
 t('shape use case', async t => {
   if (isBrowser) return t.end()
 

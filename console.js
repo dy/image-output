@@ -35,21 +35,37 @@ function toConsoleOldschool (pixels, o) {
     var dy = 2 * dx
 
 	var str = ''
-    for (var y = 0; y < o.height - 1; y += dy) {
+
+    // display 1-row data
+    if (o.height === 1) {
         for (var x = 0; x < o.width; x += dx) {
-            var i = (Math.floor(y) * o.width + Math.floor(x)) * 4
+            var i = Math.floor(x) * 4
             var r = pixels[i]
             var g = pixels[i + 1]
             var b = pixels[i + 2]
             var a = pixels[i + 3]
-            var i2 = (Math.floor(y + 1) * o.width + Math.floor(x)) * 4
-            var r2 = pixels[i2]
-            var g2 = pixels[i2 + 1]
-            var b2 = pixels[i2 + 2]
             if (!a) str += chalk.reset(' ')
-            else str += chalk.bgRgb(r, g, b).rgb(r2, g2, b2)(PIXEL)
+            else str += chalk.rgb(r, g, b)(PIXEL)
         }
-    	str += '\n'
+        str += '\n'
+    }
+    else {
+        for (var y = 0; y < o.height - 1; y += dy) {
+            for (var x = 0; x < o.width; x += dx) {
+                var i = (Math.floor(y) * o.width + Math.floor(x)) * 4
+                var r = pixels[i]
+                var g = pixels[i + 1]
+                var b = pixels[i + 2]
+                var a = pixels[i + 3]
+                var i2 = (Math.floor(y + 1) * o.width + Math.floor(x)) * 4
+                var r2 = pixels[i2]
+                var g2 = pixels[i2 + 1]
+                var b2 = pixels[i2 + 2]
+                if (!a) str += chalk.reset(' ')
+                else str += chalk.bgRgb(r, g, b).rgb(r2, g2, b2)(PIXEL)
+            }
+        	str += '\n'
+        }
     }
 
     toConsole.stdout.write(str)
