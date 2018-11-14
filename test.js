@@ -219,12 +219,6 @@ function writePixels(t, array, filepath, format, options, cb) {
   var out = fs.createWriteStream(filepath)
   output(array, out, options)
   cb()
-
-  // var out = fs.createWriteStream(filepath)
-  // var pxstream = savePixels(array, format, options)
-  // pxstream.pipe(out)
-  // .on('error', cb)
-  // .on('close', cb)
 }
 
 function compareImages(t, actualFilepath, expectedFilepath, deepEqual, cb) {

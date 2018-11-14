@@ -35,10 +35,8 @@ Shoud be an actual image data container, one of:
 * Array, UintArray, FloatArray
 * ArrayBuffer, Buffer
 * ndarray
-* Buffer
 * File, Blob
 * Promise
-* etc.
 
 Handy for that purpose is [`image-pixels`](https://ghub.io/image-pixels):
 

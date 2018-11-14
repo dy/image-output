@@ -99,9 +99,8 @@ module.exports = function output (data, dst, o) {
 	// Stream
 	if (isStream(dst)) {
 		if (!dst.write) throw Error('Only writable streams are supported')
-
 		var data = encode(pixels, o)
-		dst.write(Buffer.from(data))
+		dst.write(new Uint8Array(data))
 		dst.on('error', function (e) {
 			throw e
 		})
