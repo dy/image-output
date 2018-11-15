@@ -204,6 +204,58 @@ t('input File, Blob, Image, Canvas, Promise and other asyncs', async t => {
   t.end()
 })
 
+t.skip('input gl', async t => {
+  var canvas = document.createElement('canvas')
+  canvas.width = 16
+  canvas.height = 8
+  var gl = canvas.getContext('webgl', {preserveDrawingBuffer: true})
+  document.body.appendChild(canvas)
+
+  var regl = require('regl')({gl: gl})
+  var draw = regl({
+  vert: `
+    precision mediump float;
+    attribute vec2 position;
+    attribute vec4 color;
+    uniform vec2 shape;
+    varying vec4 fragColor;
+    void main() {
+      gl_PointSize = 1.;
+      gl_Position = vec4( 2. * (position + .5) / shape - 1., 0, 1);
+      gl_Position.y *= -1.;
+      fragColor = color / 255.;
+    }`,
+  frag: `
+  precision mediump float;
+  varying vec4 fragColor;
+  void main () {
+    gl_FragColor = fragColor;
+  }`,
+  attributes: {
+    color: [
+      0,0,0,255, 255,0,0,255, 255,255,0,255, 255,0,255,255,
+      0,255,0,255, 0,255,255,255,
+      0,0,255,255
+    ],
+    position: [
+      0,0, 1,0, 2,0, 3,0,
+      0,1, 1,1,
+      0,2
+    ]
+  },
+  uniforms: {
+    shape: [16, 8]
+  },
+  primitive: 'points',
+  count: 7
+  })
+  draw()
+
+  output(gl)
+
+  t.end()
+})
+
 
 t('readme case', async t => {
   var arr = new Uint8Array(16)

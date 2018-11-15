@@ -44,8 +44,8 @@ module.exports = function output (data, dst, o) {
 
 	// figure out width/height
 	if (o.shape) o.width = o.shape[0], o.height = o.shape[1]
-	if (!o.width) o.width = data.shape ? data.shape[0] : data.width
-	if (!o.height) o.height = data.shape ? data.shape[1] : data.height
+	if (!o.width) o.width = data.shape ? data.shape[0] : data.width || data.drawingBufferWidth
+	if (!o.height) o.height = data.shape ? data.shape[1] : data.height || data.drawingBufferHeight
 	if (!o.width || !o.height) {
 		throw new Error('Options must define `width` and `height`')
 	}

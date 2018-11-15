@@ -33,6 +33,7 @@
     "lena": "^1.0.0",
     "ndarray": "^1.0.18",
     "ndarray-scratch": "^1.2.0",
+    "regl": "^1.3.9",
     "save-pixels": "^2.3.4",
     "tape": "^4.9.1"
   },
