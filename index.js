@@ -64,7 +64,9 @@ module.exports = function output (data, dst, o) {
 
 	// document
 	if (!dst.getContext && (dst.createElement || dst.appendChild)) {
-		dst = (dst.appencChild ? dst : dst.body || dst.documentElement).appendChild((dst.createElement ? dst : dst.ownerDocument).createElement('canvas'))
+		var container = (dst.appendChild && dst.ownerDocument) ? dst : dst.body || dst.documentElement
+		var canvas = (dst.createElement ? dst : dst.ownerDocument).createElement('canvas')
+		dst = container.appendChild(canvas)
 	}
 
 	// canvas2d, context

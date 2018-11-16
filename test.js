@@ -194,6 +194,7 @@ t('output to Stream', async t => {
 t('output to document, element', async t => {
   if (!isBrowser) return t.end()
   await output(fixture, document)
+  await output(fixture, document.body)
 
   t.end()
 })
