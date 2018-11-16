@@ -13,6 +13,7 @@ var toab = require('to-array-buffer')
 var lena = require('lena')
 var fs = require('fs')
 
+
 t('show constructed 2px data', t => {
   output({
     data: [0,0,0,255, 255,255,255,255, 255,255,255,255, 0,0,0,255],
@@ -186,6 +187,13 @@ t('output to Stream', async t => {
   t.deepEqual(pixels.data, fixture.data)
 
   del('./file.png')
+
+  t.end()
+})
+
+t('output to document, element', async t => {
+  if (!isBrowser) return t.end()
+  await output(fixture, document)
 
   t.end()
 })

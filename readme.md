@@ -55,11 +55,12 @@ Type | Meaning
 ---|---
 String | File to create or path, in node. If includes extension, mimeType is detected from it.
 Canvas2D, Context2D | Render pixel data into a canvas. Canvas is resized to fit the image data. To avoid resizing, use `options.clip` property.
-console | Display image in console in browser or terminal in node.
-ndarray | Write pixel data into an ndarray.
+`document` | Create a canvas with diff data in document or element.
+`console` | Display image in console in browser or terminal in node.
 Array / FloatArray | Write pixel data normalized to [0..1] range to a float-enabled array.
 UintArray | Put pixel data to any unsigned int array.
 Buffer / ArrayBuffer | Put pixel data into a buffer, possibly encoded into target format by `options.type`.
+ndarray | Write pixel data into an ndarray.
 ImageData | Put data into ImageData instance, browser only.
 Object | Create `data`, `width` and `height` properties on an object.
 Function | Call the function ImageData argument.

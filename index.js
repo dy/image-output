@@ -62,6 +62,11 @@ module.exports = function output (data, dst, o) {
 		return toConsole(pixels, o)
 	}
 
+	// document
+	if (!dst.getContext && (dst.createElement || dst.appendChild)) {
+		dst = (dst.appencChild ? dst : dst.body || dst.documentElement).appendChild((dst.createElement ? dst : dst.ownerDocument).createElement('canvas'))
+	}
+
 	// canvas2d, context
 	if (dst.getContext) {
 		dst = dst.getContext('2d')
