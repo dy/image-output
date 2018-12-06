@@ -38,9 +38,13 @@ module.exports = function output (data, dst, o) {
 	// handle promise
 	if (data.then) {
 		return data.then(function (result) {
-			return output(result, dst, o)
+				return output(result, dst, o)
 		})
 	}
+
+	// unwrap internals
+	if (data.canvas) data = data.canvas
+	if (data.gl || data._gl || data.regl) data = data.regl ? data.regl._gl : data.gl || data._gl
 
 	// figure out width/height
 	if (o.shape) o.width = o.shape[0], o.height = o.shape[1]
