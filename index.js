@@ -58,7 +58,7 @@ module.exports = function output (data, dst, o) {
 
 	// save to a file
 	if (typeof dst === 'string') {
-		return saveFile.sync(encode(pixels, o), dst)
+		return saveFile.saveSync(encode(pixels, o), dst)
 	}
 
 	// console, stdout
