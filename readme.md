@@ -75,6 +75,15 @@ Property | Meaning
 `quality` | Defines encoding quality, 0..1, optional. By default 1.
 ...rest | Rest of options is passed to encoder.
 
+## Customize color palette in terminal
+You can choose color palette with flags or environment variable `FORCE_COLOR=0123`
+```
+node ./script.js --no-color
+node ./script.js --color
+node ./script.js --color=256
+node ./script.js --color=16m
+```
+
 ## Related
 
 * [image-equal](https://ghub.io/image-equal) − compare if two images are equal.
