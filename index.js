@@ -32,7 +32,7 @@ module.exports = function output (data, dst, o) {
 
 	// TODO: add shortcuts here for encoded png → png, array → array, canvas → canvas saves
 
-	o.type = o.type || o.mime || o.mimeType || o.format || (typeof dst === 'string' && types[ext(dst)]) || types.png
+	o.type = o.type || o.mime || o.mimeType || o.format || (typeof dst === 'string' && types[ext(dst).slice(1)]) || types.png
 	o.quality = o.quality || null
 
 	// handle promise
