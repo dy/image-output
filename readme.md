@@ -21,18 +21,15 @@ output({
 
 ### `output(source, destination?, shape|options?)`
 
-Output pixel data `source` to a `destination` based on `options`. Undefined destination displays image to console/stdout. The operation is done in sync fashion. `destination` and `options` may come in the opposite order for conveniency.
-
-```js
-output([0,1,1,0], [2,2,1], 'a.png')
-```
+Output pixel data `source` to a `destination` based on `options`. Undefined destination displays image to console/stdout. The operation is done in sync fashion.
 
 #### `source`
 
 Shoud be an actual image data container, one of:
 
 * _Canvas_, _Context2D_, _WebGLContext_
-* _ImageData_ or _Object_ `{data: Uint8Array, width, height}`
+* _ImageData_
+* _Object_ `{data: Uint8Array, width, height}`
 * DataURL or base64 string
 * _Image_, _Video_, _ImageBitmap_ with resolved data
 * _Array_, _Array_ of _Arrays_, _Uint8Array_, _FloatArray_ with raw pixels
@@ -70,12 +67,15 @@ _WebStream_ | TODO. Send data to stream, eg. `process.stdout`.
 
 Property | Meaning
 ---|---
+`data` | If not provided as the first argument, can be provided via options.
+`width`, `height` | Explicitly indicate input data shape (columns, rows). If input has dimensions info, will be ignored.
 `type` / `mime` | Encode into target type, by default detected from file extension. By default `image/png`.
 `quality` | Defines encoding quality, 0..1, optional. By default 1.
 `...rest` | Rest of options is passed to encoder.
 <!-- `clip` | Defile clipping area rectangle from the initial data to save. -->
 
 ## Customize color palette in terminal
+
 You can choose color palette with flags or environment variable `FORCE_COLOR=0123`
 ```
 node ./script.js --no-color
