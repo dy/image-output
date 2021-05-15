@@ -19,7 +19,7 @@ output({
 
 ## API
 
-### `output(source, destination?, shape|options?)`
+### `output(source, destination?, options?)`
 
 Output pixel data `source` to a `destination` based on `options`. Undefined destination displays image to console/stdout. The operation is done in sync fashion.
 
