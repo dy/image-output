@@ -61,14 +61,13 @@ _ImageData_ | Put data into _ImageData_ instance, browser only.
 _Object_ | Create `data`, `width` and `height` properties on an object.
 _Function_ | Call a function with _ImageData_ as argument.
 _Stream_ | Send data to stream, eg. `process.stdout`.
-_WebStream_ | TODO. Send data to stream, eg. `process.stdout`.
+<!--_WebStream_ | TODO. Send data to stream, eg. `process.stdout`.-->
 
 #### `options`
 
 Property | Meaning
 ---|---
-`data` | If not provided as the first argument, can be provided via options.
-`width`, `height` | Explicitly indicate input data shape (columns, rows). If input has dimensions info, will be ignored.
+`width`, `height` | Explicitly indicate input data shape (columns, rows), if input has no dimensions info.
 `type` / `mime` | Encode into target type, by default detected from file extension. By default `image/png`.
 `quality` | Defines encoding quality, 0..1, optional. By default 1.
 `...rest` | Rest of options is passed to encoder.
@@ -97,4 +96,4 @@ node ./script.js --color=16m
 
 ## License
 
-© 2018 Dmitry Yv. MIT License.
+© 2018 Dmitry Iv. MIT License.
